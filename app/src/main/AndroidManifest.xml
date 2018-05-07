@@ -2,7 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.jolysylvain.squadup">
 
+    <uses-permission
+        android:name="android.permission.AUTHENTICATE_ACCOUNTS"
+        android:maxSdkVersion="22" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
 
     <application
         android:allowBackup="true"
@@ -24,6 +28,11 @@
         <activity android:name=".RegisterActivity" />
         <activity android:name=".DialogManager" />
         <activity android:name=".Auth_checker" />
+        <activity
+            android:name=".AuthRegister"
+            android:label="@string/title_activity_auth_register"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+
     </application>
 
 </manifest>
