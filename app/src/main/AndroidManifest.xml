@@ -25,14 +25,20 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".RegisterActivity" />
         <activity android:name=".DialogManager" />
         <activity android:name=".Auth_checker" />
         <activity
             android:name=".AuthRegister"
             android:label="@string/title_activity_auth_register"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".AuthLogin"
+            android:label="@string/title_activity_auth_login"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".UserDetail"
+            android:label="@string/title_activity_user_detail"
             android:theme="@style/AppTheme.NoActionBar"></activity>
-
     </application>
 
 </manifest>

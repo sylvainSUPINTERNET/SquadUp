@@ -5,6 +5,7 @@
     <dimen name="nav_header_vertical_spacing">8dp</dimen>
     <dimen name="nav_header_height">176dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="row_padding_vertical">10dp</dimen>
 
     <!-- card spacing -->
     <dimen name="mtrl_card_spacing">20dp</dimen>

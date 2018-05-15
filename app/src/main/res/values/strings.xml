@@ -23,9 +23,16 @@
 
     <string name="login_email">Email</string>
     <string name="login_password">Password</string>
+    <string name="login_submit">Se connecter</string>
     <string name="title_activity_auth_register">AuthRegister</string>
 
-    <string name="USER_CREDENTIALS">USER_CREDENTIALS</string> <!-- name for account when user is registered with success, contain infos (name + jwt token) -->
+
     <!-- -->
+
+    <!-- SESSION MANAGER -->
+    <string name="ERROR_TOKEN">Token not provided</string>
+    <string name="title_activity_auth_login">AuthLogin</string>
+    <string name="title_activity_user_detail">UserDetail</string>
+
 
 </resources>

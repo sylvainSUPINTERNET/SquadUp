@@ -1,7 +1,5 @@
 package com.example.jolysylvain.squadup;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -29,33 +27,25 @@ import org.json.JSONObject;
 
 import cz.msebera.android.httpclient.Header;
 
-public class AuthRegister extends AppCompatActivity
+public class AuthLogin extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-
-
-    EditText lastname;
-    EditText email;
-    EditText password;
-    EditText passwordConfirmed;
 
     Context context;
 
     String user_token;
 
+    EditText email;
+    EditText password;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        /*
-           *
-           *  SET THE CONTEXT
-           *
-         */
         this.context = this;
 
-        setContentView(R.layout.activity_auth_register);
+
+        setContentView(R.layout.activity_auth_login);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -91,7 +81,7 @@ public class AuthRegister extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.auth_register, menu);
+        getMenuInflater().inflate(R.menu.auth_login, menu);
         return true;
     }
 
@@ -135,26 +125,19 @@ public class AuthRegister extends AppCompatActivity
         return true;
     }
 
+    public void login(View view) {
+        Log.d("LOGIN","login pressed");
+        email = findViewById(R.id.login_email);
+        password = findViewById(R.id.login_password);
 
-
-    public void register(View v) {
-        // do something when the button is clicked
-        lastname = findViewById(R.id.register_lastname);
-        email = findViewById(R.id.register_email);
-        password = findViewById(R.id.register_password);
-        passwordConfirmed = findViewById(R.id.register_passwordConfirmed);
-
-
-        //TODO move this call API is just a test
         AsyncHttpClient client = new AsyncHttpClient();
-
         final RequestParams body = new RequestParams();
-        body.put("name", lastname.getText().toString());
+
         body.put("email", email.getText().toString());
         body.put("password", password.getText().toString());
-        body.put("passwordConfirmed", passwordConfirmed.getText().toString());
 
-        client.post("http://10.0.2.2:1337/api/user/register", body, new AsyncHttpResponseHandler() {
+
+        client.post("http://10.0.2.2:1337/api/user/login", body, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
 
@@ -164,42 +147,26 @@ public class AuthRegister extends AppCompatActivity
                     System.out.println(json);
                     System.out.print("status code" + statusCode);
 
-                    //TODO : IMPORTANT
 
-                        if(json.getBoolean("error") == false){
-                            DialogManager success = new DialogManager(json.getString("message"), "Register terminé", context);
-                            success.generateDialog().show();
+                    if(json.getBoolean("error") == false){
+                        DialogManager success = new DialogManager(json.getString("message"), "Logged with success", context);
+                        success.generateDialog().show();
 
-                            //TODO coté API, ajouter "email" dans l'objet userInformations (register ctrl api) et l''ajouter dans l'account etc ici
-                            user_token = json.getString("token");
+                        user_token = json.getString("token");
+                        SessionManager session = new SessionManager(context);
+                        session.storeToken(user_token);
 
-                            SessionManager session = new SessionManager(context);
-                            session.storeToken(user_token);
-                            //DEV
-                            //Log.d("CLEAR",session.clearSharedPreferences());
+                        Toast.makeText(getApplicationContext(), "Vous êtes connecté",
+                                Toast.LENGTH_SHORT).show();
+                        Intent i = new Intent(AuthLogin.this, MainActivity.class);
+                        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(i);
+                        finish();
 
-                            Log.d("TOKEN STORED REGISTER", session.getToken());
-
-                            Toast.makeText(getApplicationContext(), "Vous êtes connecté",
-                                    Toast.LENGTH_SHORT).show();
-                            Intent i = new Intent(AuthRegister.this, MainActivity.class);
-                            i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            startActivity(i);
-                            finish();
-
-                        }else{
-                            //todo -> rajouter dans le controller register de l'api dans le return json un field (error:true sur les erreurs) sinon on rentre jamais dans ce IF par contre, regarder que ca casse a rien dans le register cote app web
-                            String errorMsg = "";
-                            String lastnameError = json.getString("name");
-                            String passwordError = json.getString("password");
-                            String passwordConfirmedError = json.getString("passwordConfirmed");
-                            String emailError = json.getString("email");
-
-                            errorMsg = lastnameError + "\n" + passwordError + "\n" + passwordConfirmedError + "\n" + emailError + "\n";
-
-                            DialogManager errorRegister = new DialogManager(errorMsg, "Erreur lors de l'enregistrement", context);
-                            errorRegister.generateDialog().show();
-                        }
+                    }else{
+                        DialogManager success = new DialogManager(json.getString("message"), "Erreur durant votre connexion", context);
+                        success.generateDialog().show();
+                    }
 
 
                 } catch (JSONException e) {
@@ -214,5 +181,4 @@ public class AuthRegister extends AppCompatActivity
         });
 
     }
-
 }
