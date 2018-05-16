@@ -42,5 +42,7 @@
     <!-- ipconfig -> Ipv4 to get phone ip or 10.0.2.2 if emulator -->
     <string name="DOMAIN">http://10.0.2.2:</string>
 
+    <string name="TOKEN_SECRET">ThisSecretShouldBeCommonToApiAndAPP!!!</string>
+
 
 </resources>
