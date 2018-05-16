@@ -35,4 +35,12 @@
     <string name="title_activity_user_detail">UserDetail</string>
 
 
+
+    <!-- CONFIG api port -->
+    <string name="API_PORT">1337</string>
+
+    <!-- ipconfig -> Ipv4 to get phone ip or 10.0.2.2 if emulator -->
+    <string name="DOMAIN">http://10.0.2.2:</string>
+
+
 </resources>

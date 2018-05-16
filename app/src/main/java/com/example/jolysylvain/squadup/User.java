@@ -2,6 +2,12 @@ package com.example.jolysylvain.squadup;
 
 import android.content.Context;
 
+import org.json.JSONObject;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
 public class User {
 
     private String role = "";
@@ -9,14 +15,12 @@ public class User {
     private String email = "";
     private String name = "";
 
-
-
-
     public User(String email, String description, String role, String name) {
         this.email = email;
         this.description = description;
         this.role = role;
         this.name = name;
+
     }
 
     public String getRole() {

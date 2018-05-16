@@ -1,11 +1,16 @@
 package com.example.jolysylvain.squadup;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.preference.Preference;
+import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,6 +25,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
@@ -55,6 +63,27 @@ public class MainActivity extends AppCompatActivity
         this.context = this;
 
         SessionManager sessionManager = new SessionManager(context);
+        NetworkManager networkManager = new NetworkManager(context);
+
+
+        //TODO creer une pop up qui check qu'on a bien internet sinon, on peut pas afficher tous les calls API etc
+        Log.d("CONNECTED TO INTERNET ?", networkManager.hasValidConnection().toString());
+        if(networkManager.hasValidConnection()){
+            //TODO ici copié tous le code c'est bon il ya internet
+        }else{
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.MyAlertDialogStyle);
+            builder.setTitle("Aucune connection internet détectée");
+            builder.setMessage("Afin de profiter pleinnement de notre application, une connexion internet est requise \n\n Voulez vous l'activez ?");
+            builder.setPositiveButton("Oui", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    // TODO Auto-generated method stub
+                    startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                }
+            });
+            builder.setNegativeButton("Non", null);
+            builder.show();
+        }
 
         //Log.d("HOME TOKEN ->",getSharedPreferences("SquadUp", MODE_PRIVATE).getString("token", ""));
         //TODO display en fonction de si on est connecté ou pas et set dans le current_token
@@ -200,7 +229,7 @@ public class MainActivity extends AppCompatActivity
             AsyncHttpClient client = new AsyncHttpClient();
             client.addHeader("x-access-token", current_token);
 
-            client.post("http://10.0.2.2:1337/api/user/list", new AsyncHttpResponseHandler() {
+            client.post(getString(R.string.DOMAIN)+""+getString(R.string.API_PORT)+"/api/user/list", new AsyncHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
 

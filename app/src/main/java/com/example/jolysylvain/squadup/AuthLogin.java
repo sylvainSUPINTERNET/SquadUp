@@ -137,7 +137,7 @@ public class AuthLogin extends AppCompatActivity
         body.put("password", password.getText().toString());
 
 
-        client.post("http://10.0.2.2:1337/api/user/login", body, new AsyncHttpResponseHandler() {
+        client.post(getString(R.string.DOMAIN)+""+getString(R.string.API_PORT)+"/api/user/login", body, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
 

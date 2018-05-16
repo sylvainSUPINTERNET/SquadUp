@@ -5,6 +5,12 @@ import android.app.Dialog;
 import android.content.Context;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Layout;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
 public class DialogManager extends AppCompatActivity {
 
@@ -47,4 +53,5 @@ public class DialogManager extends AppCompatActivity {
         AlertDialog dialogCreated = builderDialog.create();
         return dialogCreated;
     }
+
 }
