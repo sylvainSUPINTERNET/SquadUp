@@ -140,6 +140,7 @@ public class MainActivity extends AppCompatActivity
 
                 }
         };
+
         mAdapter = new UserAdapter(usersList, mListener);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(mLayoutManager);
