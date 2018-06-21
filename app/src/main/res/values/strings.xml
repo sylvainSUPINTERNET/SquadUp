@@ -2,8 +2,8 @@
     <string name="app_name">SquadUp</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_title">SquadUp</string>
+    <string name="nav_header_subtitle">squadup.service@gmail.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
@@ -35,14 +35,14 @@
     <string name="title_activity_user_detail">UserDetail</string>
 
 
-
     <!-- CONFIG api port -->
-    <string name="API_PORT">1337</string>
+    <string name="API_PORT">8080</string>
 
     <!-- ipconfig -> Ipv4 to get phone ip or 10.0.2.2 if emulator -->
     <string name="DOMAIN">http://10.0.2.2:</string>
 
     <string name="TOKEN_SECRET">ThisSecretShouldBeCommonToApiAndAPP!!!</string>
+    <string name="title_activity_message">MessageActivity</string>
 
 
 </resources>

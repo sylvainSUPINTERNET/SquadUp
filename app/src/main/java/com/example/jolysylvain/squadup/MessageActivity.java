@@ -1,12 +1,10 @@
 package com.example.jolysylvain.squadup;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.wifi.WifiManager;
+import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
-import android.preference.Preference;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -15,6 +13,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -25,10 +24,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.Window;
-import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -38,23 +35,26 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.Serializable;
+import java.lang.reflect.Array;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import cz.msebera.android.httpclient.Header;
 
-import static com.loopj.android.http.AsyncHttpClient.log;
+public class MessageActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener {
 
-
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, Serializable {
     Context context;
     String current_token;
 
-    private List<User> usersList = new ArrayList<>();
+    private List<Message> messagesList = new ArrayList<>();
     private RecyclerView recyclerView;
-    private UserAdapter mAdapter;
+    private MessageAdapter mAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,11 +95,12 @@ public class MainActivity extends AppCompatActivity
             current_token = sessionManager.getToken();
         }
 
-        setContentView(R.layout.activity_main);
+
+        setContentView(R.layout.activity_message);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
+        /*
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,7 +109,7 @@ public class MainActivity extends AppCompatActivity
                         .setAction("Action", null).show();
             }
         });
-
+        */
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -119,31 +120,12 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-
-
         //TODO display la liste uniquement si le token est OK
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 
-        UserAdapter.OnItemClickListener mListener = new UserAdapter.OnItemClickListener(){
-                @Override public void onItemClick(User user){
-                    //todo open new window from right with all info + profiles list
 
-                    Intent intent = new Intent(context, UserDetail.class);
-                    intent.putExtra("user_name", user.getName().toString());
-                    //intent.putExtra("user_email", user.getEmail().toString());
-                    intent.putExtra("user_description", user.getDescription().toString());
-                    //intent.putExtra("user_role", user.getRole().toString());
-                    //todo profiles apres (ARRAY)
 
-                    Log.d("TESTON",user.getRole());
-                    //TODO BUG ICI EMAIL ROLE EMPTY
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.enter, R.anim.exit);
-
-                }
-        };
-
-        mAdapter = new UserAdapter(usersList, mListener);
+        mAdapter = new MessageAdapter(messagesList);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -151,8 +133,7 @@ public class MainActivity extends AppCompatActivity
         recyclerView.setAdapter(mAdapter);
 
 
-        prepareUserData();
-
+        prepareMessageData();
     }
 
     @Override
@@ -168,7 +149,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.message, menu);
         return true;
     }
 
@@ -193,17 +174,14 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-      if (id == R.id.nav_gallery) {
-            Intent intent = new Intent(this, AuthRegister.class);
-            startActivity(intent);
-            overridePendingTransition(R.anim.enter, R.anim.exit);
+        if (id == R.id.nav_camera) {
+            // Handle the camera action
+        } else if (id == R.id.nav_gallery) {
 
-      } else if (id == R.id.nav_slideshow) {
-          Intent intent = new Intent(this, AuthLogin.class);
-          startActivity(intent);
+        } else if (id == R.id.nav_slideshow) {
+
         } else if (id == R.id.nav_manage) {
-          Intent intent = new Intent(this, MessageActivity.class);
-          startActivity(intent);
+
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
@@ -215,7 +193,7 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    private void prepareUserData() {
+    private void prepareMessageData() {
 
         //todo get data from API maintenant et faire une loop pour add chaque sur sdans la liste et setter l'adapter sur cette list
 
@@ -233,7 +211,7 @@ public class MainActivity extends AppCompatActivity
             AsyncHttpClient client = new AsyncHttpClient();
             client.addHeader("x-access-token", current_token);
 
-            client.post(getString(R.string.DOMAIN)+""+getString(R.string.API_PORT)+"/api/user/list", new AsyncHttpResponseHandler() {
+            client.post(getString(R.string.DOMAIN)+""+getString(R.string.API_PORT)+"/api/message/list/received", new AsyncHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
 
@@ -242,27 +220,38 @@ public class MainActivity extends AppCompatActivity
                                 new String(responseBody));
                         System.out.println(json);
 
-                        String email = "";
-                        String name = "";
-                        String role = "";
-                        String description = "";
+                        String sender = "";
+                        String receveur = "";
+                        String message = "";
 
-                        JSONArray users = json.getJSONArray("users");
 
-                        for (int i = 0; i < users.length(); i++) {
-                            JSONObject row = users.getJSONObject(i);
+                        Date send_at;
+                        String tmpDate;
+
+                        JSONArray messagesData = json.getJSONArray("message"); 
+
+                        for (int i = 0; i < messagesData.length(); i++) {
+                            JSONObject row = messagesData.getJSONObject(i);
                             //System.out.println(row.getString("name"));
 
-                            name = row.getString("name");
+                            sender = row.getString("sender");
                                  /*
                             email = row.getString("email");
                             */
-                            description = row.getString("description");
+                            message = row.getString("message");
                             //role = row.getString("role");
 
-                            User user = new User(email,description, role, name);
-                            usersList.add(user);
+                            receveur = row.getString("receveur");
+
+
+                            tmpDate = row.getString("send_at");
+                            send_at=new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(tmpDate);
+
+                            Message message2 = new Message(sender,receveur, message, send_at);
+                            messagesList.add(message2);
                             mAdapter.notifyDataSetChanged();
+
+
                         }
 
                         //TODO : IMPORTANT API rajouter un champs true false error sur le res.json pour gérer les erreurs ....
@@ -278,6 +267,8 @@ public class MainActivity extends AppCompatActivity
 
 
                     } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (ParseException e) {
                         e.printStackTrace();
                     }
                 }
