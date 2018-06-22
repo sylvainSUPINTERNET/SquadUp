@@ -1,7 +1,5 @@
 package com.example.jolysylvain.squadup;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -116,17 +114,20 @@ public class AuthRegister extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        if (id == R.id.menu_registration) {
+            Intent intent = new Intent(this, AuthRegister.class);
+            startActivity(intent);
+            overridePendingTransition(R.anim.enter, R.anim.exit);
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.menu_login) {
+            Intent intent = new Intent(this, AuthLogin.class);
+            startActivity(intent);
+        } else if (id == R.id.menu_messages) {
+            Intent intent = new Intent(this, MessageActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.menu_webapp) {
 
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.menu_email) {
 
         }
 

@@ -7,6 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import org.w3c.dom.Text;
+
 import java.util.List;
 
 
@@ -22,7 +25,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyViewHolder> 
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
-        public TextView name, email, role, description;
+        public TextView name, email, role, description, nbProfiles;
         public Context contextItem;
 
         public MyViewHolder(View view) {
@@ -30,7 +33,8 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyViewHolder> 
             name = (TextView) view.findViewById(R.id.name);
             email = (TextView) view.findViewById(R.id.email);
             description = (TextView) view.findViewById(R.id.description);
-            role = (TextView) view.findViewById(R.id.role);
+            nbProfiles = (TextView) view.findViewById(R.id.nb_profiles);
+
             contextItem = view.getContext();
 
         }
@@ -67,7 +71,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyViewHolder> 
         holder.name.setText(user.getName());
         holder.email.setText(user.getEmail());
         holder.description.setText(user.getDescription());
-        holder.role.setText(user.getRole());
+        holder.nbProfiles.setText(user.getNbProfiles());
         holder.bind(usersList.get(position), listener);
     }
 

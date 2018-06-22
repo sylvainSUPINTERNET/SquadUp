@@ -10,26 +10,19 @@ import java.util.Objects;
 
 public class User {
 
-    private String role = "";
     private String description = "";
     private String email = "";
     private String name = "";
+    private String nbProfiles = "";
 
-    public User(String email, String description, String role, String name) {
+
+    public User(String email, String description, String name, String nbProfiles) {
         this.email = email;
         this.description = description;
-        this.role = role;
         this.name = name;
-
+        this.nbProfiles = nbProfiles;
     }
 
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
 
     public String getDescription() {
         return description;
@@ -54,6 +47,16 @@ public class User {
     public void setName(String name) {
         this.name = name;
     }
+
+    public String getNbProfiles() {
+        return nbProfiles;
+    }
+
+    public void setNbProfiles(String nbProfiles) {
+        this.nbProfiles = nbProfiles;
+    }
+
+
 
 
 }

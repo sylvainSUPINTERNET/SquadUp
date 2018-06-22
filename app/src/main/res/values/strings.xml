@@ -5,7 +5,7 @@
     <string name="nav_header_title">SquadUp</string>
     <string name="nav_header_subtitle">squadup.service@gmail.com</string>
     <string name="nav_header_desc">Navigation header</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">SquadUp website</string>
 
 
     <string name="home_card">Home card string</string>
@@ -32,7 +32,7 @@
     <!-- SESSION MANAGER -->
     <string name="ERROR_TOKEN">Token not provided</string>
     <string name="title_activity_auth_login">AuthLogin</string>
-    <string name="title_activity_user_detail">UserDetail</string>
+    <string name="title_activity_user_detail">Membre</string>
 
 
     <!-- CONFIG api port -->

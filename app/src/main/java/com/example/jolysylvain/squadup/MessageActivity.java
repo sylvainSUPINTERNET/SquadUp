@@ -6,16 +6,12 @@ import android.content.Intent;
 import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.InputType;
 import android.util.Log;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -24,24 +20,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.EditText;
-import android.widget.TextView;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Array;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -174,17 +164,20 @@ public class MessageActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        if (id == R.id.menu_registration) {
+            Intent intent = new Intent(this, AuthRegister.class);
+            startActivity(intent);
+            overridePendingTransition(R.anim.enter, R.anim.exit);
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.menu_login) {
+            Intent intent = new Intent(this, AuthLogin.class);
+            startActivity(intent);
+        } else if (id == R.id.menu_messages) {
+            Intent intent = new Intent(this, MessageActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.menu_webapp) {
 
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.menu_email) {
 
         }
 
@@ -199,9 +192,9 @@ public class MessageActivity extends AppCompatActivity
 
         /*
         User user1 = new User("test@aeza.fr","DESCRIPTION", "ROLE_USER", "SYLVAIN");
-        usersList.add(user1);
+        userslist.add(user1);
         User user2 = new User("test@aezaR.fr","R", "ROLE_USER", "JLY");
-        usersList.add(user2);
+        userslist.add(user2);
 
         mAdapter.notifyDataSetChanged();
         */

@@ -4,9 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.text.InputType;
 import android.util.Log;
@@ -21,10 +19,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.auth0.android.jwt.Claim;
-import com.auth0.android.jwt.JWT;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -33,10 +28,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.reflect.Array;
-import java.util.Date;
 
 import cz.msebera.android.httpclient.Header;
-import cz.msebera.android.httpclient.client.cache.Resource;
 
 public class UserDetail extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -47,13 +40,13 @@ public class UserDetail extends AppCompatActivity
     String user_email;
     String user_role;
     String user_description;
-    String user_picture; //todo
-    Array user_profiles; //todo
+    String nbProfiles;
 
     TextView title;
     TextView description;
     TextView email;
-    TextView role;
+    TextView profiles_nb_view;
+
 
     Context context;
 
@@ -100,6 +93,8 @@ public class UserDetail extends AppCompatActivity
             user_name = extras.getString("user_name");
             //user_email= extras.getString("user_email");
             user_description = extras.getString("user_description");
+            nbProfiles = extras.getString("user_nb_profiles");
+
             //user_role = extras.getString("user_role");
 
             //todo ERROR ici email est empty le role aussi
@@ -107,10 +102,11 @@ public class UserDetail extends AppCompatActivity
             title = findViewById(R.id.title);
             email = findViewById(R.id.email);
             description = findViewById(R.id.description);
-            role = findViewById(R.id.role);
+            profiles_nb_view = findViewById(R.id.nb_profiles);
 
             title.setText(user_name);
             description.setText(user_description);
+            profiles_nb_view.setText(nbProfiles);
 
             FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
             fab.setOnClickListener(new View.OnClickListener() {
@@ -123,7 +119,7 @@ public class UserDetail extends AppCompatActivity
 
                     final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.MyAlertDialogStyle);
                     builder.setTitle("Ecrivez un message à " + user_name);
-                    builder.setMessage("Vous pouvez faire parvenir un message lisible sur l'application web : ");
+
                     // Set up the input
                     final EditText input = new EditText(context);
                         // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
@@ -143,8 +139,6 @@ public class UserDetail extends AppCompatActivity
 
                             //post new message
 
-                            EditText inputMsg = findViewById(R.id.message);
-
                             message = input.getText().toString();
                             receveur = title.getText().toString();
 
@@ -159,6 +153,7 @@ public class UserDetail extends AppCompatActivity
                             client.post(getString(R.string.DOMAIN)+""+getString(R.string.API_PORT)+"/api/message/add", body, new AsyncHttpResponseHandler() {
                                 @Override
                                 public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+
 
                                     try {
                                         JSONObject json = new JSONObject(
@@ -249,17 +244,20 @@ public class UserDetail extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        if (id == R.id.menu_registration) {
+            Intent intent = new Intent(this, AuthRegister.class);
+            startActivity(intent);
+            overridePendingTransition(R.anim.enter, R.anim.exit);
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.menu_login) {
+            Intent intent = new Intent(this, AuthLogin.class);
+            startActivity(intent);
+        } else if (id == R.id.menu_messages) {
+            Intent intent = new Intent(this, MessageActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.menu_webapp) {
 
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.menu_email) {
 
         }
 

@@ -1,12 +1,9 @@
 package com.example.jolysylvain.squadup;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.preference.Preference;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -25,26 +22,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.Window;
-import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
-
-import static com.loopj.android.http.AsyncHttpClient.log;
 
 
 public class MainActivity extends AppCompatActivity
@@ -132,20 +123,19 @@ public class MainActivity extends AppCompatActivity
                     intent.putExtra("user_name", user.getName().toString());
                     //intent.putExtra("user_email", user.getEmail().toString());
                     intent.putExtra("user_description", user.getDescription().toString());
-                    //intent.putExtra("user_role", user.getRole().toString());
-                    //todo profiles apres (ARRAY)
-
-                    Log.d("TESTON",user.getRole());
-                    //TODO BUG ICI EMAIL ROLE EMPTY
+                    intent.putExtra("user_nb_profiles", user.getNbProfiles().toString());
                     startActivity(intent);
                     overridePendingTransition(R.anim.enter, R.anim.exit);
 
                 }
         };
 
+
+
         mAdapter = new UserAdapter(usersList, mListener);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.addItemDecoration(new VerticalSpaceItemDecoration(48));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         recyclerView.setAdapter(mAdapter);
@@ -181,6 +171,7 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Log.d("ok", "ok");
             return true;
         }
 
@@ -193,20 +184,20 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-      if (id == R.id.nav_gallery) {
+      if (id == R.id.menu_registration) {
             Intent intent = new Intent(this, AuthRegister.class);
             startActivity(intent);
             overridePendingTransition(R.anim.enter, R.anim.exit);
 
-      } else if (id == R.id.nav_slideshow) {
+      } else if (id == R.id.menu_login) {
           Intent intent = new Intent(this, AuthLogin.class);
           startActivity(intent);
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.menu_messages) {
           Intent intent = new Intent(this, MessageActivity.class);
           startActivity(intent);
-        } else if (id == R.id.nav_share) {
+        } else if (id == R.id.menu_webapp) {
 
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.menu_email) {
 
         }
 
@@ -221,9 +212,9 @@ public class MainActivity extends AppCompatActivity
 
         /*
         User user1 = new User("test@aeza.fr","DESCRIPTION", "ROLE_USER", "SYLVAIN");
-        usersList.add(user1);
+        userslist.add(user1);
         User user2 = new User("test@aezaR.fr","R", "ROLE_USER", "JLY");
-        usersList.add(user2);
+        userslist.add(user2);
 
         mAdapter.notifyDataSetChanged();
         */
@@ -244,7 +235,7 @@ public class MainActivity extends AppCompatActivity
 
                         String email = "";
                         String name = "";
-                        String role = "";
+                        String nbProfiles = "";
                         String description = "";
 
                         JSONArray users = json.getJSONArray("users");
@@ -259,8 +250,17 @@ public class MainActivity extends AppCompatActivity
                             */
                             description = row.getString("description");
                             //role = row.getString("role");
+                            JSONArray tmpProfiles = row.getJSONArray("profiles");
 
-                            User user = new User(email,description, role, name);
+                            if(tmpProfiles.length() <= 0) {
+                                nbProfiles = "Aucun profiles";
+                            } else {
+                                nbProfiles = tmpProfiles.length() +"";
+                            }
+
+
+
+                            User user = new User(email,description, name, nbProfiles);
                             usersList.add(user);
                             mAdapter.notifyDataSetChanged();
                         }
