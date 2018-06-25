@@ -8,12 +8,14 @@ public class Message {
     private String receveur = "";
     private String message = "";
     private Date send_at;
+    private String _id;
 
-    public Message(String sender, String receveur, String message, Date send_at) {
+    public Message(String sender, String receveur, String message, Date send_at, String _id) {
         this.sender = sender;
         this.receveur = receveur;
         this.message = message;
         this.send_at = send_at;
+        this._id = _id;
     }
 
     public String getSender() {
@@ -46,6 +48,14 @@ public class Message {
 
     public void setSend_at(Date send_at) {
         this.send_at = send_at;
+    }
+
+    public String get_id() {
+        return _id;
+    }
+
+    public void set_id(String _id) {
+        this._id = _id;
     }
 
 }

@@ -23,7 +23,7 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="url" value="jar:file:/Applications/Android%20Studio.app/Contents/plugins/android/lib/android.jar!/images/material_design_icons/action/ic_language_black_24dp.xml" />
+                                                <entry key="url" value="jar:file:/Applications/Android%20Studio.app/Contents/plugins/android/lib/android.jar!/images/material_design_icons/content/ic_block_black_24dp.xml" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -33,9 +33,9 @@
                                   </option>
                                   <option name="values">
                                     <map>
-                                      <entry key="outputName" value="webapp" />
+                                      <entry key="outputName" value="delete_icon" />
                                       <entry key="theme" value="CUSTOM" />
-                                      <entry key="themeColor" value="3de5c4" />
+                                      <entry key="themeColor" value="e5543c" />
                                     </map>
                                   </option>
                                 </PersistentState>

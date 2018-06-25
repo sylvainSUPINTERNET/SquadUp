@@ -3,6 +3,7 @@ package com.example.jolysylvain.squadup;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.icu.text.DateFormat;
 import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -23,6 +24,7 @@ import android.view.MenuItem;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,6 +33,7 @@ import org.json.JSONObject;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
@@ -110,12 +113,63 @@ public class MessageActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+
+        //TODO display la liste uniquement si le token est OK
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+
+        MessageAdapter.OnItemClickListener mListener = new MessageAdapter.OnItemClickListener(){
+            @Override public void onItemClick(final Message message){
+                AlertDialog.Builder alert = new AlertDialog.Builder(context);
+                alert.setTitle("Voulez-vous supprimer ce message ? ");
+
+                alert.setPositiveButton("Oui", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        Log.d("DELETE", message.get_id());
+
+                        AsyncHttpClient client = new AsyncHttpClient();
+                        client.addHeader("x-access-token", current_token);
+
+                        HashMap<String, String> param = new HashMap<String, String>();
+                        param.put("message_id", message.get_id());
+                        RequestParams params = new RequestParams(param);
+
+                        client.post(getString(R.string.DOMAIN)+""+getString(R.string.API_PORT)+"/api/message/delete", params,new AsyncHttpResponseHandler() {
+
+
+                            @Override
+                            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                                        messagesList.remove(message);
+                                        mAdapter.notifyDataSetChanged();
+                            }
+
+                            @Override
+                            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+
+                            }
+                        });
+
+
+                    }
+                });
+
+                alert.setNegativeButton("Annuler",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                            }
+                        });
+
+                alert.show();
+            }
+        };
+
+
+
         //TODO display la liste uniquement si le token est OK
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 
 
 
-        mAdapter = new MessageAdapter(messagesList);
+        mAdapter = new MessageAdapter(messagesList, mListener);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -216,6 +270,7 @@ public class MessageActivity extends AppCompatActivity
                         String sender = "";
                         String receveur = "";
                         String message = "";
+                        String _id = "";
 
 
                         Date send_at;
@@ -238,9 +293,10 @@ public class MessageActivity extends AppCompatActivity
 
 
                             tmpDate = row.getString("send_at");
-                            send_at=new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(tmpDate);
 
-                            Message message2 = new Message(sender,receveur, message, send_at);
+                            _id = row.getString("_id");
+                            send_at=new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(tmpDate);
+                            Message message2 = new Message(sender,receveur, message, send_at, _id);
                             messagesList.add(message2);
                             mAdapter.notifyDataSetChanged();
 

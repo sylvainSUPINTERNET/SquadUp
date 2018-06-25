@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.Date;
@@ -15,20 +16,25 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MyViewHo
     public interface OnItemClickListener {
         void onItemClick(Message message);
     }
+
     private List<Message> messagesList;
+    private final MessageAdapter.OnItemClickListener listener;
 
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
-        public TextView sender, receveur, message, send_at;
+        public TextView sender, message, send_at;
+        public ImageView delete;
         public Context contextItem;
 
         public MyViewHolder(View view) {
             super(view);
             sender = (TextView) view.findViewById(R.id.sender);
-            receveur = (TextView) view.findViewById(R.id.receveur);
+            //receveur = (TextView) view.findViewById(R.id.receveur);
             message = (TextView) view.findViewById(R.id.message);
             send_at = (TextView) view.findViewById(R.id.sendAt);
+            delete = view.findViewById(R.id.delete);
+
             contextItem = view.getContext();
 
         }
@@ -46,8 +52,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MyViewHo
     }
 
 
-    public MessageAdapter(List<Message> messageList) {
+    public MessageAdapter(List<Message> messageList, MessageAdapter.OnItemClickListener listener) {
         this.messagesList = messageList;
+        this.listener = listener;
     }
 
     @Override
@@ -63,7 +70,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MyViewHo
         Message message = messagesList.get(position);
         holder.sender.setText(message.getSender());
         holder.message.setText(message.getMessage());
-        holder.receveur.setText(message.getReceveur());
+        //holder.receveur.setText(message.getReceveur());
+        holder.bind(messagesList.get(position), listener);
         holder.send_at.setText(message.getSend_at().toString());
     }
 

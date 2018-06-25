@@ -42,7 +42,7 @@
     <string name="DOMAIN">http://10.0.2.2:</string>
 
     <string name="TOKEN_SECRET">ThisSecretShouldBeCommonToApiAndAPP!!!</string>
-    <string name="title_activity_message">MessageActivity</string>
+    <string name="title_activity_message">Messagerie</string>
 
 
 </resources>
