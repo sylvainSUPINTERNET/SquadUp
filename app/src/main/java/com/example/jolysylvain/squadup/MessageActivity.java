@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.icu.text.DateFormat;
 import android.icu.text.SimpleDateFormat;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
@@ -230,9 +231,16 @@ public class MessageActivity extends AppCompatActivity
             Intent intent = new Intent(this, MessageActivity.class);
             startActivity(intent);
         } else if (id == R.id.menu_webapp) {
+            Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse(getString(R.string.webapp_url)));
+            startActivity(intent);
 
         } else if (id == R.id.menu_email) {
-
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setType("plain/text");
+            intent.putExtra(Intent.EXTRA_EMAIL, new String[] { getString(R.string.nav_header_title)});
+            intent.putExtra(Intent.EXTRA_SUBJECT, "Contact SquadUp");
+            intent.putExtra(Intent.EXTRA_TEXT, "Veuillez nous indiquer votre requête . . .");
+            startActivity(Intent.createChooser(intent, ""));
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

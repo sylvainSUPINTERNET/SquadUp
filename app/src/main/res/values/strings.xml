@@ -6,6 +6,9 @@
     <string name="nav_header_subtitle">squadup.service@gmail.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">SquadUp website</string>
+    <string name="action_user_detail">Envoyer un message</string>
+
+    <string name="webapp_url">http://pfe-app.nicolas-alvarez.fr</string>
 
 
     <string name="home_card">Home card string</string>
@@ -24,7 +27,7 @@
     <string name="login_email">Email</string>
     <string name="login_password">Password</string>
     <string name="login_submit">Se connecter</string>
-    <string name="title_activity_auth_register">AuthRegister</string>
+    <string name="title_activity_auth_register">Connexion</string>
 
 
     <!-- -->

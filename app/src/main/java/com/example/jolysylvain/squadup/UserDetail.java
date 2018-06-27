@@ -3,6 +3,7 @@ package com.example.jolysylvain.squadup;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
@@ -106,7 +107,10 @@ public class UserDetail extends AppCompatActivity
 
             title.setText(user_name);
             description.setText(user_description);
+
             profiles_nb_view.setText(nbProfiles);
+
+            
 
             FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
             fab.setOnClickListener(new View.OnClickListener() {
@@ -232,6 +236,85 @@ public class UserDetail extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.MyAlertDialogStyle);
+            builder.setTitle("Ecrivez un message à " + user_name);
+
+            // Set up the input
+            final EditText input = new EditText(context);
+            // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+            input.setInputType(InputType.TYPE_CLASS_TEXT);
+            input.setId(R.id.message);
+            builder.setView(input);
+
+            builder.setPositiveButton("Envoyer", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    // TODO Auto-generated method stub
+
+                            /* Pas besoin car API va déjà parser son current_token
+                            JWT parsedJWT = new JWT(current_token);
+                            Claim subscriptionMetaData = parsedJWT.getClaim("name"); // parse and get key name form token sent
+                            user_name_from_token = subscriptionMetaData.asString();
+                            */
+
+                    //post new message
+
+                    message = input.getText().toString();
+                    receveur = title.getText().toString();
+
+                    AsyncHttpClient client = new AsyncHttpClient();
+                    client.addHeader("Content-Type", "application/x-www-form-urlencoded");
+                    client.addHeader("x-access-token", current_token);
+                    final RequestParams body = new RequestParams();
+
+                    body.put("message", message);
+                    body.put("receveur",receveur);
+
+                    client.post(getString(R.string.DOMAIN)+""+getString(R.string.API_PORT)+"/api/message/add", body, new AsyncHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+
+
+                            try {
+                                JSONObject json = new JSONObject(
+                                        new String(responseBody));
+                                System.out.println(json);
+                                System.out.print("status code" + statusCode);
+
+
+                                if(json.getBoolean("error") == false){
+                                    DialogManager success = new DialogManager("Votre message a bien été envoyé !", "Message envoyé", context);
+                                    success.generateDialog().show();
+                                }else{
+                                    DialogManager success = new DialogManager(json.getString("message"), "Erreur lors de l'envoi de votre message", context);
+                                    success.generateDialog().show();
+                                }
+
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+
+                        }
+                    });
+
+
+                }
+            });
+
+            //cancel l'envoit du message
+            builder.setNegativeButton("annuler", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    // TODO Auto-generated method stub
+                    dialog.cancel();
+                }
+            });
+
+            builder.show();
+
             return true;
         }
 
@@ -248,17 +331,29 @@ public class UserDetail extends AppCompatActivity
             Intent intent = new Intent(this, AuthRegister.class);
             startActivity(intent);
             overridePendingTransition(R.anim.enter, R.anim.exit);
-
         } else if (id == R.id.menu_login) {
             Intent intent = new Intent(this, AuthLogin.class);
             startActivity(intent);
         } else if (id == R.id.menu_messages) {
             Intent intent = new Intent(this, MessageActivity.class);
             startActivity(intent);
+        } else if (id == R.id.menu_users) {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        } else if(id == R.id.menu_home) {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
         } else if (id == R.id.menu_webapp) {
+            Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse(getString(R.string.webapp_url)));
+            startActivity(intent);
 
         } else if (id == R.id.menu_email) {
-
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setType("plain/text");
+            intent.putExtra(Intent.EXTRA_EMAIL, new String[] { getString(R.string.nav_header_title)});
+            intent.putExtra(Intent.EXTRA_SUBJECT, "Contact SquadUp");
+            intent.putExtra(Intent.EXTRA_TEXT, "Veuillez nous indiquer votre requête . . .");
+            startActivity(Intent.createChooser(intent, ""));
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
